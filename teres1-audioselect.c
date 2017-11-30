@@ -17,16 +17,8 @@
 #include <linux/input.h>
 #include <signal.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <sys/mman.h>
-#include <sys/select.h>
-#include <pthread.h>
 #include <unistd.h>
-#include <sched.h>
-
-
-#include <linux/kernel.h>
 
 #define SW_AC_IO_BASE 0x01c22c00
 #define SUNXI_HMIC_STS 0x01c22c00+0x319
