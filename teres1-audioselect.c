@@ -86,8 +86,7 @@ int main (int argc, char **argv)
 
 	unsigned int *reg_val;
 	
-      if (!argv[1])
-  {
+
 /*
  * When started without argument just check for jack and set mixer
  */
@@ -115,11 +114,12 @@ int main (int argc, char **argv)
 		select_mode(2,0);		
       
 	close(fd);
-     exit(0);
-}
-else
-{
-   
+     
+     
+      if (!argv[1])
+				exit(0);
+				
+				
 device = argv[1];
 
 for (;;)
@@ -132,7 +132,7 @@ for (;;)
 
 
 
-  while(read(fd, &ie, sizeof(struct input_event)))
+  while(read(fd, &ie, sizeof(struct input_event))>0)
   {
 	//  printf("type %d\tcode %d\tvalue %d\n", ie.type, ie.code, ie.value);
     switch (ie.type)
@@ -145,7 +145,7 @@ for (;;)
       break;
     }
   }
-}
+
 close(fd);
 usleep(65535u);
 }
