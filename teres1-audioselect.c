@@ -105,11 +105,11 @@ int main (int argc, char **argv)
         return -1;
     }
 
-    if ((int)mem[page_offset] & 0x08)  //headset?
+    if ((int)mem[page_offset] && 0x08)  //headset?
 		select_mode(4,1);
 		else
 		select_mode(4,0);
-    if ((int)mem[page_offset] & 0x04)  //headphone?
+    if ((int)mem[page_offset] && 0x04)  //headphone?
 		select_mode(2,1);
 		else
 		select_mode(2,0);		
