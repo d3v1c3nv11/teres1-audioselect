@@ -74,7 +74,7 @@ int main (int argc, char **argv)
 {
   const char *device = NULL;
   int fd;
-  struct input_event ie
+  struct input_event ie;
 	
 
 /*
