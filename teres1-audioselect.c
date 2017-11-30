@@ -82,16 +82,14 @@ int main (int argc, char **argv)
 {
   const char *device = NULL;
   int fd;
-  struct input_event ie;
-
-	unsigned int *reg_val;
+  struct input_event ie
 	
 
 /*
  * When started without argument just check for jack and set mixer
  */
   
-	off_t offset = SUNXI_HMIC_STS;
+    off_t offset = SUNXI_HMIC_STS;
     size_t len = 0x01;
     size_t pagesize = sysconf(_SC_PAGE_SIZE);
     off_t page_base = (offset / pagesize) * pagesize;
