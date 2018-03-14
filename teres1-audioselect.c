@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <string.h>
 
 #define SW_AC_IO_BASE 0x01c22c00
 #define SUNXI_HMIC_STS 0x01c22c00+0x319
@@ -69,17 +70,73 @@ void select_mode(char mmsel,char mval){
       }
 	
 }
+const char *readLine(FILE *file) {
 
+    if (file == NULL) {
+        printf("Error: file pointer is null.");
+        exit(1);
+    }
+
+    int maximumLineLength = 128;
+    char *lineBuffer = (char *)malloc(sizeof(char) * maximumLineLength);
+
+    if (lineBuffer == NULL) {
+        printf("Error allocating memory for line buffer.");
+        exit(1);
+    }
+
+    char ch = getc(file);
+    int count = 0;
+
+    while ((ch != '\n') && (ch != EOF)) {
+        if (count == maximumLineLength) {
+            maximumLineLength += 128;
+            lineBuffer = realloc(lineBuffer, maximumLineLength);
+            if (lineBuffer == NULL) {
+                printf("Error reallocating space for line buffer.");
+                exit(1);
+            }
+        }
+        lineBuffer[count] = ch;
+        count++;
+
+        ch = getc(file);
+    }
+
+    lineBuffer[count] = '\0';
+    char line[count + 1];
+    strncpy(line, lineBuffer, (count + 1));
+    free(lineBuffer);
+    const char *constLine = line;
+    return constLine;
+}
 int main (int argc, char **argv)
 {
   const char *device = NULL;
+  const char *debug;
   int fd;
   struct input_event ie;
-	
 
+FILE *uenv;
 /*
  * When started without argument just check for jack and set mixer
  */
+     uenv=fopen("/boot/uEnv.txt","r");
+    if (uenv) { 
+    while(1)
+    {
+	  debug = readLine(uenv);
+	  if (strlen(debug)==0) break; 
+	  if (strcmp(debug,"debug=on")==0) {
+		  // device is in debug mode!!!
+		  select_mode(2,0);
+		  select_mode(4,0);
+		  exit(0);
+	  }
+	}	
+  }
+  
+  
   
     off_t offset = SUNXI_HMIC_STS;
     size_t len = 0x01;
@@ -109,7 +166,7 @@ int main (int argc, char **argv)
       if (!argv[1])
 				exit(0);
 				
-				
+	
 device = argv[1];
 
 for (;;)
@@ -139,5 +196,6 @@ for (;;)
 close(fd);
 usleep(65535u);
 }
+
   return 0;
 }
